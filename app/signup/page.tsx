@@ -15,6 +15,11 @@ export default function SignupPage() {
     setState({})
 
     const formData = new FormData(e.currentTarget)
+    if (formData.get('password') !== formData.get('confirmPassword')) {
+      setState({ error: 'Passwords do not match' })
+      setLoading(false)
+      return
+    }
     const res = await signup({}, formData)
 
     if (res?.error) {
@@ -81,6 +86,20 @@ export default function SignupPage() {
               type="password"
               id="password"
               name="password"
+              required
+              className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-white placeholder-zinc-600 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all"
+              placeholder="••••••••"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label htmlFor="confirmPassword" className="block text-sm font-medium text-zinc-300">
+              Confirm Password
+            </label>
+            <input
+              type="password"
+              id="confirmPassword"
+              name="confirmPassword"
               required
               className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-white placeholder-zinc-600 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all"
               placeholder="••••••••"
