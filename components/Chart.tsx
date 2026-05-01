@@ -8,6 +8,7 @@ import {
   YAxis,
   Tooltip,
 } from 'recharts'
+import { TrendingUp, BarChart3 } from 'lucide-react'
 
 interface Transaction {
   id: string
@@ -54,56 +55,61 @@ export default function Chart({ transactions = [], currentUserId = '' }: ChartPr
     }
   })
 
-  // If all values are 0, fallback to some simulated data so it doesn't look empty
   const totalSpending = chartData.reduce((sum, item) => sum + item.amount, 0)
-  if (totalSpending === 0) {
-    chartData[0].amount = 200
-    chartData[1].amount = 450
-    chartData[2].amount = 300
-    chartData[3].amount = 600
-    chartData[4].amount = 400
-    chartData[5].amount = 750
-  }
 
   return (
-    <div className="bg-zinc-950/40 border border-zinc-800/50 rounded-2xl p-6 h-[300px] flex flex-col backdrop-blur-xl shadow-2xl shadow-zinc-950/50">
-      <h3 className="text-lg font-bold text-white px-2 mb-4">Spending Overview</h3>
-      <div className="flex-1 w-full text-zinc-400">
-        <ResponsiveContainer width="100%" height="100%">
-          <AreaChart
-            data={chartData}
-            margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
-          >
-            <defs>
-              <linearGradient id="colorAmount" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#10b981" stopOpacity={0.3}/>
-                <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
-              </linearGradient>
-            </defs>
-            <XAxis dataKey="name" stroke="#71717a" fontSize={12} tickLine={false} axisLine={false} />
-            <YAxis stroke="#71717a" fontSize={12} tickLine={false} axisLine={false} />
-            <Tooltip
-              contentStyle={{
-                backgroundColor: '#09090b',
-                borderColor: '#27272a',
-                borderRadius: '16px',
-                color: '#fff',
-                borderWidth: '1px',
-                backdropFilter: 'blur(12px)'
-              }}
-              itemStyle={{ color: '#10b981' }}
-            />
-            <Area
-              type="monotone"
-              dataKey="amount"
-              stroke="#10b981"
-              fillOpacity={1}
-              fill="url(#colorAmount)"
-              strokeWidth={2}
-            />
-          </AreaChart>
-        </ResponsiveContainer>
+    <div className="bg-zinc-900/80 border border-zinc-800/60 rounded-2xl p-5 md:p-6 h-full min-h-[300px] flex flex-col">
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="text-sm font-bold text-white uppercase tracking-wide">Spending Overview</h3>
+        <span className="text-[11px] text-zinc-500 font-medium">Last 6 months</span>
       </div>
+
+      {totalSpending === 0 ? (
+        <div className="flex-1 flex flex-col items-center justify-center text-center px-4">
+          <BarChart3 className="h-10 w-10 text-zinc-700 mb-3" />
+          <p className="text-zinc-500 text-sm font-medium">No spending data yet</p>
+          <p className="text-zinc-600 text-xs mt-1 max-w-[200px]">Your chart will appear once you make transactions.</p>
+        </div>
+      ) : (
+        <div className="flex-1 w-full text-zinc-400 mt-2">
+          <ResponsiveContainer width="100%" height="100%">
+            <AreaChart
+              data={chartData}
+              margin={{ top: 5, right: 5, left: -25, bottom: 0 }}
+            >
+              <defs>
+                <linearGradient id="colorAmount" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#10b981" stopOpacity={0.25}/>
+                  <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
+                </linearGradient>
+              </defs>
+              <XAxis dataKey="name" stroke="#52525b" fontSize={11} tickLine={false} axisLine={false} />
+              <YAxis stroke="#52525b" fontSize={11} tickLine={false} axisLine={false} />
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: '#18181b',
+                  borderColor: '#27272a',
+                  borderRadius: '12px',
+                  color: '#fff',
+                  borderWidth: '1px',
+                  fontSize: '12px',
+                  padding: '8px 12px'
+                }}
+                itemStyle={{ color: '#10b981' }}
+                cursor={{ stroke: '#27272a' }}
+              />
+              <Area
+                type="monotone"
+                dataKey="amount"
+                stroke="#10b981"
+                fillOpacity={1}
+                fill="url(#colorAmount)"
+                strokeWidth={2}
+              />
+            </AreaChart>
+          </ResponsiveContainer>
+        </div>
+      )}
     </div>
   )
 }

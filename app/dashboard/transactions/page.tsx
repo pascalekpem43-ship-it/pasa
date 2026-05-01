@@ -40,46 +40,16 @@ export default async function TransactionsPage() {
   }
 
   if (!user) {
-    // Mock data for preview if not logged in or no env
-    user = { id: 'mock-id', email: 'demo@apexbank.com' }
-    transactions = [
-      { 
-        id: '1', 
-        sender_id: 'mock-id', 
-        receiver_id: 'user2', 
-        amount: 250.00, 
-        status: 'completed', 
-        created_at: new Date().toISOString(), 
-        receiver: { name: 'Sarah Jenkins', email: 'sarah@example.com' } 
-      },
-      { 
-        id: '2', 
-        sender_id: 'user3', 
-        receiver_id: 'mock-id', 
-        amount: 1200.00, 
-        status: 'completed', 
-        created_at: new Date(Date.now() - 86400000).toISOString(), 
-        sender: { name: 'Acme Corp', email: 'acme@example.com' } 
-      },
-      { 
-        id: '3', 
-        sender_id: 'mock-id', 
-        receiver_id: 'user4', 
-        amount: 45.99, 
-        status: 'completed', 
-        created_at: new Date(Date.now() - 172800000).toISOString(), 
-        receiver: { name: 'Starbucks', email: 'billing@starbucks.com' } 
-      },
-    ]
+    user = { id: 'no-user', email: '' }
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 md:space-y-8">
       {!hasEnv && (
         <div className="bg-amber-500/10 border border-amber-500/20 rounded-2xl p-4 flex items-center gap-3 text-amber-400 text-sm">
           <AlertCircle className="h-5 w-5 shrink-0" />
           <span>
-            Supabase environment variables are missing. Showing demo history.
+            Supabase environment variables are missing. Please configure your credentials.
           </span>
         </div>
       )}

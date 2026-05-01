@@ -26,14 +26,14 @@ export default function SendMoneyPage() {
   }
 
   return (
-    <div className="max-w-xl mx-auto space-y-6 mt-4">
+    <div className="max-w-xl mx-auto space-y-6 mt-0 md:mt-4">
       <div>
-        <h1 className="text-3xl font-bold text-white tracking-tight">Send Money</h1>
-        <p className="text-zinc-400 mt-1">Transfer funds instantly to any ApexBank user.</p>
+        <h1 className="text-2xl md:text-3xl font-bold text-white tracking-tight">Send Money</h1>
+        <p className="text-zinc-400 mt-1 text-sm md:text-base">Transfer funds instantly to any ApexBank user.</p>
       </div>
 
-      <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-8 shadow-2xl">
-        <form onSubmit={handleSubmit} className="space-y-6">
+      <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-5 md:p-8 shadow-2xl">
+        <form onSubmit={handleSubmit} className="space-y-5 md:space-y-6">
           {state.error && (
             <div className="bg-rose-500/10 border border-rose-500/20 rounded-2xl p-4 flex items-center gap-3 text-rose-400 text-sm">
               <AlertCircle className="h-5 w-5 shrink-0" />
@@ -57,7 +57,7 @@ export default function SendMoneyPage() {
               id="email"
               name="email"
               required
-              className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all"
+              className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all text-sm md:text-base"
               placeholder="name@example.com"
             />
           </div>
@@ -81,7 +81,7 @@ export default function SendMoneyPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-emerald-500 hover:bg-emerald-600 disabled:bg-zinc-800 disabled:text-zinc-500 text-zinc-950 font-bold px-6 py-4 rounded-xl flex items-center justify-center gap-2 transition-all shadow-lg shadow-emerald-500/25 mt-8"
+            className="w-full bg-emerald-500 hover:bg-emerald-600 disabled:bg-zinc-800 disabled:text-zinc-500 text-zinc-950 font-bold px-6 py-3.5 md:py-4 rounded-xl flex items-center justify-center gap-2 transition-all shadow-lg shadow-emerald-500/25 mt-6 md:mt-8 text-sm md:text-base"
           >
             {loading ? (
               <>

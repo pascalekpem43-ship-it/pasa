@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { ArrowUpRight, ArrowDownLeft, Search, Filter } from 'lucide-react'
+import { ArrowUpRight, ArrowDownLeft, Search, Filter, Inbox } from 'lucide-react'
 
 interface Transaction {
   id: string
@@ -43,17 +43,17 @@ export default function TransactionHistory({ initialTransactions, currentUserId 
     })
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+    <div className="space-y-4 md:space-y-6">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 md:gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-white tracking-tight">Transaction History</h1>
-          <p className="text-zinc-400 mt-1">View and filter all your digital transfers.</p>
+          <h1 className="text-2xl md:text-3xl font-bold text-white tracking-tight">Transaction History</h1>
+          <p className="text-zinc-400 mt-1 text-sm md:text-base">View and filter all your digital transfers.</p>
         </div>
       </div>
 
       {/* Filters */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 bg-zinc-900 border border-zinc-800 rounded-2xl p-4">
-        <div className="relative flex-1">
+      <div className="grid grid-cols-1 gap-3 md:grid-cols-3 md:gap-4 bg-zinc-900 border border-zinc-800 rounded-2xl p-3 md:p-4">
+        <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-500" />
           <input
             type="text"
@@ -64,10 +64,10 @@ export default function TransactionHistory({ initialTransactions, currentUserId 
           />
         </div>
 
-        <div className="flex gap-2">
+        <div className="flex gap-1.5 md:gap-2">
           <button
             onClick={() => setTypeFilter('all')}
-            className={`flex-1 py-2.5 rounded-xl text-sm font-medium transition-all ${
+            className={`flex-1 py-2.5 rounded-xl text-xs md:text-sm font-medium transition-all ${
               typeFilter === 'all' ? 'bg-zinc-800 text-white' : 'text-zinc-400 hover:text-white hover:bg-zinc-900'
             }`}
           >
@@ -75,7 +75,7 @@ export default function TransactionHistory({ initialTransactions, currentUserId 
           </button>
           <button
             onClick={() => setTypeFilter('income')}
-            className={`flex-1 py-2.5 rounded-xl text-sm font-medium transition-all ${
+            className={`flex-1 py-2.5 rounded-xl text-xs md:text-sm font-medium transition-all ${
               typeFilter === 'income' ? 'bg-emerald-500/10 text-emerald-400' : 'text-zinc-400 hover:text-emerald-400/80 hover:bg-zinc-900'
             }`}
           >
@@ -83,7 +83,7 @@ export default function TransactionHistory({ initialTransactions, currentUserId 
           </button>
           <button
             onClick={() => setTypeFilter('expense')}
-            className={`flex-1 py-2.5 rounded-xl text-sm font-medium transition-all ${
+            className={`flex-1 py-2.5 rounded-xl text-xs md:text-sm font-medium transition-all ${
               typeFilter === 'expense' ? 'bg-rose-500/10 text-rose-400' : 'text-zinc-400 hover:text-rose-400/80 hover:bg-zinc-900'
             }`}
           >
@@ -104,11 +104,22 @@ export default function TransactionHistory({ initialTransactions, currentUserId 
       </div>
 
       {/* List */}
-      <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-6">
+      <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-4 md:p-6">
         {filteredTransactions.length === 0 ? (
-          <div className="text-center py-12">
-            <Filter className="h-12 w-12 text-zinc-700 mx-auto mb-4" />
-            <p className="text-zinc-400 text-sm font-medium">No matching transactions found</p>
+          <div className="text-center py-8 md:py-12">
+            <div className="bg-zinc-800/30 rounded-2xl p-4 mb-3 inline-block">
+              {initialTransactions.length === 0 ? (
+                <Inbox className="h-10 w-10 md:h-12 md:w-12 text-zinc-600" />
+              ) : (
+                <Filter className="h-10 w-10 md:h-12 md:w-12 text-zinc-700" />
+              )}
+            </div>
+            <p className="text-zinc-400 text-sm font-medium">
+              {initialTransactions.length === 0 ? 'No transactions yet' : 'No matching transactions found'}
+            </p>
+            {initialTransactions.length === 0 && (
+              <p className="text-zinc-600 text-xs mt-1">Your transfer history will appear here.</p>
+            )}
           </div>
         ) : (
           <div className="divide-y divide-zinc-800/50">
@@ -122,21 +133,21 @@ export default function TransactionHistory({ initialTransactions, currentUserId 
               const iconColor = isSender ? 'text-rose-400' : 'text-emerald-400'
 
               return (
-                <div key={tx.id} className="flex items-center justify-between py-4 px-2 first:pt-0 last:pb-0">
-                  <div className="flex items-center gap-4">
-                    <div className={`${iconBg} p-3 rounded-2xl`}>
-                      <Icon className={`h-5 w-5 ${iconColor}`} />
+                <div key={tx.id} className="flex items-center justify-between py-3 md:py-4 px-1 md:px-2 first:pt-0 last:pb-0 gap-3">
+                  <div className="flex items-center gap-3 md:gap-4 min-w-0">
+                    <div className={`${iconBg} p-2.5 md:p-3 rounded-xl md:rounded-2xl shrink-0`}>
+                      <Icon className={`h-4 w-4 md:h-5 md:w-5 ${iconColor}`} />
                     </div>
-                    <div>
-                      <p className="text-zinc-200 font-semibold text-sm">
+                    <div className="min-w-0">
+                      <p className="text-zinc-200 font-semibold text-sm truncate">
                         {displayUser?.name || 'Unknown User'}
                       </p>
-                      <p className="text-zinc-400 text-xs mt-0.5">
+                      <p className="text-zinc-400 text-xs mt-0.5 truncate hidden sm:block">
                         {displayUser?.email || 'No email provided'}
                       </p>
                       <span className="block text-zinc-500 text-[10px] mt-1">
                         {new Date(tx.created_at).toLocaleDateString('en-US', {
-                          month: 'long',
+                          month: 'short',
                           day: 'numeric',
                           year: 'numeric',
                           hour: '2-digit',
@@ -145,8 +156,8 @@ export default function TransactionHistory({ initialTransactions, currentUserId 
                       </span>
                     </div>
                   </div>
-                  <div className="text-right">
-                    <p className={`font-bold text-base ${amountClass}`}>
+                  <div className="text-right shrink-0">
+                    <p className={`font-bold text-sm md:text-base ${amountClass}`}>
                       {amountSign}${tx.amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </p>
                     <span className="inline-flex items-center mt-1 text-[10px] px-2.5 py-0.5 rounded-full font-bold bg-zinc-800 text-zinc-400 capitalize">

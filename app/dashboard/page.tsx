@@ -9,7 +9,7 @@ export default async function DashboardPage() {
   const hasEnv = process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
   
   let user: any = null
-  let account = { balance: 1000.00 }
+  let account = { balance: 0 }
   let transactions: any[] = []
 
   if (hasEnv) {
@@ -56,70 +56,23 @@ export default async function DashboardPage() {
     }
   }
 
-  // Fallback data spanning multiple months for the chart
-  if (!user || transactions.length === 0) {
-    if (!user) {
-      user = { id: 'mock-id', email: 'demo@apexbank.com', user_metadata: { name: 'Demo User' } }
-    }
-    transactions = [
-      { 
-        id: '1', 
-        sender_id: 'mock-id', 
-        receiver_id: 'other', 
-        amount: 250.00, 
-        status: 'completed', 
-        created_at: new Date().toISOString(), 
-        receiver: { name: 'Sarah Jenkins', email: 'sarah@example.com' } 
-      },
-      { 
-        id: '2', 
-        sender_id: 'other', 
-        receiver_id: 'mock-id', 
-        amount: 1200.00, 
-        status: 'completed', 
-        created_at: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(), 
-        sender: { name: 'Acme Corp', email: 'acme@example.com' } 
-      },
-      { 
-        id: '3', 
-        sender_id: 'mock-id', 
-        receiver_id: 'other', 
-        amount: 450.00, 
-        status: 'completed', 
-        created_at: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000).toISOString(), 
-        receiver: { name: 'Netflix', email: 'billing@netflix.com' } 
-      },
-      { 
-        id: '4', 
-        sender_id: 'mock-id', 
-        receiver_id: 'other', 
-        amount: 800.00, 
-        status: 'completed', 
-        created_at: new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString(), 
-        receiver: { name: 'Apple Store', email: 'apple@example.com' } 
-      },
-      { 
-        id: '5', 
-        sender_id: 'other', 
-        receiver_id: 'mock-id', 
-        amount: 2000.00, 
-        status: 'completed', 
-        created_at: new Date(Date.now() - 120 * 24 * 60 * 60 * 1000).toISOString(), 
-        sender: { name: 'Hustle Inc.', email: 'hustle@example.com' } 
-      }
-    ]
+  // Set fallback user info only (no fake transactions or balances)
+  if (!user) {
+    user = { id: 'no-user', email: '', user_metadata: { name: 'User' } }
   }
 
   const income = transactions
-    .filter(tx => tx.receiver_id === (user?.id || 'mock-id') && tx.status === 'completed')
+    .filter(tx => tx.receiver_id === user.id && tx.status === 'completed')
     .reduce((sum, tx) => sum + Number(tx.amount), 0)
 
   const expenses = transactions
-    .filter(tx => tx.sender_id === (user?.id || 'mock-id') && tx.status === 'completed')
+    .filter(tx => tx.sender_id === user.id && tx.status === 'completed')
     .reduce((sum, tx) => sum + Number(tx.amount), 0)
 
+  const firstName = (user?.user_metadata?.name || 'User').split(' ')[0]
+
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 md:space-y-8">
       {!hasEnv && (
         <div className="bg-amber-500/10 border border-amber-500/20 rounded-2xl p-4 flex items-center gap-3 text-amber-400 text-sm">
           <AlertCircle className="h-5 w-5 shrink-0" />
@@ -129,22 +82,24 @@ export default async function DashboardPage() {
         </div>
       )}
 
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-white tracking-tight">
-            Welcome back, {user?.user_metadata?.name || 'User'}
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-white tracking-tight">
+            Welcome back, {firstName} 👋
           </h1>
-          <p className="text-zinc-400 mt-1">Here's a summary of your digital wallet today.</p>
+          <p className="text-zinc-500 mt-1 text-sm">Here&apos;s your financial overview.</p>
         </div>
         <Link 
           href="/dashboard/send"
-          className="bg-emerald-500 hover:bg-emerald-600 text-zinc-950 font-semibold px-6 py-3 rounded-xl flex items-center justify-center gap-2 transition-all shadow-lg shadow-emerald-500/25 shrink-0"
+          className="bg-emerald-500 hover:bg-emerald-600 text-zinc-950 font-semibold px-5 py-2.5 rounded-xl flex items-center justify-center gap-2 transition-all shadow-lg shadow-emerald-500/25 shrink-0 text-sm w-full sm:w-auto"
         >
           Send Money <ArrowRight className="h-4 w-4" />
         </Link>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      {/* Main Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-1">
           <BalanceCard 
             balance={account.balance} 
@@ -154,13 +109,12 @@ export default async function DashboardPage() {
           />
         </div>
         <div className="lg:col-span-2">
-          <Chart transactions={transactions} currentUserId={user?.id || 'mock-id'} />
+          <Chart transactions={transactions} currentUserId={user?.id || ''} />
         </div>
       </div>
 
-      <div className="mt-8">
-        <TransactionList transactions={transactions.slice(0, 5)} currentUserId={user?.id || ''} />
-      </div>
+      {/* Transactions */}
+      <TransactionList transactions={transactions.slice(0, 5)} currentUserId={user?.id || ''} />
     </div>
   )
 }

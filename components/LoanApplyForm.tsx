@@ -26,19 +26,19 @@ export default function LoanApplyForm() {
   }
 
   return (
-    <div className="bg-zinc-950/40 border border-zinc-800/50 rounded-2xl p-6 backdrop-blur-xl h-fit">
-      <h2 className="text-xl font-bold text-white mb-4">Apply for a Loan</h2>
+    <div className="bg-zinc-950/40 border border-zinc-800/50 rounded-2xl p-5 md:p-6 backdrop-blur-xl h-fit">
+      <h2 className="text-lg md:text-xl font-bold text-white mb-4">Apply for a Loan</h2>
       
       <form onSubmit={handleSubmit} className="space-y-4">
         {state.error && (
-          <div className="bg-rose-500/10 border border-rose-500/20 rounded-2xl p-4 flex items-center gap-3 text-rose-400 text-sm">
+          <div className="bg-rose-500/10 border border-rose-500/20 rounded-2xl p-3 md:p-4 flex items-center gap-3 text-rose-400 text-sm">
             <AlertCircle className="h-5 w-5 shrink-0" />
             <span>{state.error}</span>
           </div>
         )}
 
         {state.success && (
-          <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-2xl p-4 flex items-center gap-3 text-emerald-400 text-sm">
+          <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-2xl p-3 md:p-4 flex items-center gap-3 text-emerald-400 text-sm">
             <CheckCircle2 className="h-5 w-5 shrink-0" />
             <span>{state.message || 'Loan application submitted!'}</span>
           </div>
@@ -67,7 +67,7 @@ export default function LoanApplyForm() {
           <span className="text-xs text-zinc-500 mt-1 block">Min: $100 | Max: $50,000</span>
         </div>
 
-        <div className="bg-zinc-900/50 rounded-xl p-4 space-y-2 border border-zinc-900">
+        <div className="bg-zinc-900/50 rounded-xl p-3 md:p-4 space-y-2 border border-zinc-900">
           <div className="flex justify-between text-sm">
             <span className="text-zinc-400">Interest Rate</span>
             <span className="text-emerald-400 font-semibold">5.00% (Fixed)</span>
@@ -81,7 +81,7 @@ export default function LoanApplyForm() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-emerald-500 hover:bg-emerald-600 disabled:bg-zinc-800 disabled:text-zinc-500 text-zinc-950 font-bold py-3 px-4 rounded-xl transition-all shadow-lg shadow-emerald-500/25 text-center flex items-center justify-center gap-2"
+          className="w-full bg-emerald-500 hover:bg-emerald-600 disabled:bg-zinc-800 disabled:text-zinc-500 text-zinc-950 font-bold py-3 px-4 rounded-xl transition-all shadow-lg shadow-emerald-500/25 text-center flex items-center justify-center gap-2 text-sm md:text-base"
         >
           {loading ? (
             <>

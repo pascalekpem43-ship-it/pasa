@@ -50,28 +50,11 @@ export default async function AdminPage() {
     }
   }
 
-  // Fallback/Mock for local dev if no env or not admin (for demo purposes)
+  // Allow access without env for local dev (but with empty data)
   if (!isAdmin && !hasEnv) {
     isAdmin = true
     user = { id: 'admin-id', email: 'admin@apexbank.com', user_metadata: { name: 'System Admin' } }
-    loans = [
-      {
-        id: 'loan-mock-1',
-        amount: 25000.00,
-        interest_rate: 5.00,
-        status: 'pending',
-        created_at: new Date().toISOString(),
-        users: { name: 'John Doe', email: 'john@example.com' }
-      },
-      {
-        id: 'loan-mock-2',
-        amount: 5000.00,
-        interest_rate: 5.00,
-        status: 'approved',
-        created_at: new Date(Date.now() - 86400000).toISOString(),
-        users: { name: 'Jane Smith', email: 'jane@example.com' }
-      }
-    ]
+    // No mock loans — start empty
   } else if (!isAdmin && hasEnv) {
     // Redirect non-admins to dashboard
     redirect('/dashboard')

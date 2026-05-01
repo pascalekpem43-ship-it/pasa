@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Home, Send, History, User, LogOut, Building2, Landmark, Shield } from 'lucide-react'
+import { Home, Send, History, User, LogOut, Building2, Landmark, Shield, Menu, X } from 'lucide-react'
 import { signOut } from '@/app/actions/auth'
 import { createClient } from '@/lib/supabase/client'
 
@@ -38,6 +38,7 @@ const baseRoutes = [
 export default function Sidebar() {
   const pathname = usePathname()
   const [routes, setRoutes] = useState(baseRoutes)
+  const [mobileOpen, setMobileOpen] = useState(false)
 
   useEffect(() => {
     async function checkAdmin() {
@@ -86,15 +87,41 @@ export default function Sidebar() {
     checkAdmin()
   }, [])
 
+  // Close mobile menu on route change
+  useEffect(() => {
+    setMobileOpen(false)
+  }, [pathname])
 
-  return (
-    <div className="flex h-full flex-col bg-zinc-950 text-white w-64 border-r border-zinc-800">
-      <div className="p-6 flex items-center gap-2 font-bold text-xl tracking-tight text-emerald-400">
-        <Building2 className="h-6 w-6" />
-        <span>ApexBank</span>
+  // Prevent body scroll when mobile menu is open
+  useEffect(() => {
+    if (mobileOpen) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = ''
+    }
+    return () => {
+      document.body.style.overflow = ''
+    }
+  }, [mobileOpen])
+
+  const sidebarContent = (
+    <>
+      <div className="p-6 flex items-center justify-between">
+        <div className="flex items-center gap-2 font-bold text-xl tracking-tight text-emerald-400">
+          <Building2 className="h-6 w-6" />
+          <span>ApexBank</span>
+        </div>
+        {/* Close button visible only on mobile */}
+        <button
+          onClick={() => setMobileOpen(false)}
+          className="md:hidden p-2 rounded-xl text-zinc-400 hover:text-white hover:bg-zinc-900 transition-all"
+          aria-label="Close menu"
+        >
+          <X className="h-5 w-5" />
+        </button>
       </div>
       
-      <nav className="flex-1 px-4 space-y-1 mt-6">
+      <nav className="flex-1 px-4 space-y-1 mt-2">
         {routes.map((route) => {
           const Icon = route.icon
           const isActive = pathname === route.href
@@ -128,6 +155,41 @@ export default function Sidebar() {
           Sign Out
         </button>
       </div>
-    </div>
+    </>
+  )
+
+  return (
+    <>
+      {/* Mobile hamburger button */}
+      <button
+        onClick={() => setMobileOpen(true)}
+        className="md:hidden fixed top-4 left-4 z-50 bg-zinc-900/90 backdrop-blur-xl border border-zinc-800 p-3 rounded-xl text-zinc-300 hover:text-white hover:bg-zinc-800 transition-all shadow-lg shadow-zinc-950/50"
+        aria-label="Open menu"
+      >
+        <Menu className="h-5 w-5" />
+      </button>
+
+      {/* Mobile backdrop overlay */}
+      {mobileOpen && (
+        <div
+          className="md:hidden fixed inset-0 z-40 bg-black/60 backdrop-blur-sm"
+          onClick={() => setMobileOpen(false)}
+        />
+      )}
+
+      {/* Mobile slide-out sidebar */}
+      <div
+        className={`md:hidden fixed inset-y-0 left-0 z-50 w-72 bg-zinc-950 border-r border-zinc-800 flex flex-col transform transition-transform duration-300 ease-out ${
+          mobileOpen ? 'translate-x-0' : '-translate-x-full'
+        }`}
+      >
+        {sidebarContent}
+      </div>
+
+      {/* Desktop sidebar */}
+      <div className="hidden md:flex h-full flex-col bg-zinc-950 text-white w-64 border-r border-zinc-800 shrink-0">
+        {sidebarContent}
+      </div>
+    </>
   )
 }

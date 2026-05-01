@@ -1,4 +1,4 @@
-import { ArrowUpRight, ArrowDownLeft } from 'lucide-react'
+import { ArrowUpRight, ArrowDownLeft, Inbox } from 'lucide-react'
 
 interface Transaction {
   id: string
@@ -16,19 +16,31 @@ interface TransactionListProps {
   currentUserId: string
 }
 
+function formatAmount(value: number): string {
+  if (value % 1 === 0) {
+    return value.toLocaleString('en-US')
+  }
+  return value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+}
+
 export default function TransactionList({ transactions, currentUserId }: TransactionListProps) {
   if (!transactions || transactions.length === 0) {
     return (
-      <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-8 text-center">
-        <p className="text-zinc-400 text-sm">No transactions found.</p>
+      <div className="bg-zinc-900/80 border border-zinc-800/60 rounded-2xl p-5 md:p-6">
+        <h3 className="text-sm font-bold text-white uppercase tracking-wide mb-6">Recent Transactions</h3>
+        <div className="flex flex-col items-center justify-center py-8 md:py-10 text-center">
+          <Inbox className="h-9 w-9 text-zinc-700 mb-3" />
+          <p className="text-zinc-500 text-sm font-medium">No transactions yet</p>
+          <p className="text-zinc-600 text-xs mt-1">Your recent transfers will appear here.</p>
+        </div>
       </div>
     )
   }
 
   return (
-    <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-6">
-      <h3 className="text-lg font-bold text-white px-2 mb-4">Recent Transactions</h3>
-      <div className="divide-y divide-zinc-800/50">
+    <div className="bg-zinc-900/80 border border-zinc-800/60 rounded-2xl p-5 md:p-6">
+      <h3 className="text-sm font-bold text-white uppercase tracking-wide mb-4">Recent Transactions</h3>
+      <div className="space-y-1">
         {transactions.map((tx) => {
           const isSender = tx.sender_id === currentUserId
           const displayUser = isSender ? tx.receiver : tx.sender
@@ -39,16 +51,16 @@ export default function TransactionList({ transactions, currentUserId }: Transac
           const iconColor = isSender ? 'text-rose-400' : 'text-emerald-400'
 
           return (
-            <div key={tx.id} className="flex items-center justify-between py-4 px-2 first:pt-0 last:pb-0">
-              <div className="flex items-center gap-4">
-                <div className={`${iconBg} p-3 rounded-2xl`}>
-                  <Icon className={`h-5 w-5 ${iconColor}`} />
+            <div key={tx.id} className="flex items-center justify-between py-3 px-2 rounded-xl hover:bg-zinc-800/30 transition-colors gap-3">
+              <div className="flex items-center gap-3 min-w-0">
+                <div className={`${iconBg} p-2.5 rounded-xl shrink-0`}>
+                  <Icon className={`h-4 w-4 ${iconColor}`} />
                 </div>
-                <div>
-                  <p className="text-zinc-200 font-semibold text-sm">
+                <div className="min-w-0">
+                  <p className="text-white font-medium text-sm truncate">
                     {displayUser?.name || 'Unknown User'}
                   </p>
-                  <p className="text-zinc-400 text-xs mt-0.5">
+                  <p className="text-zinc-500 text-xs mt-0.5">
                     {new Date(tx.created_at).toLocaleDateString('en-US', {
                       month: 'short',
                       day: 'numeric',
@@ -58,13 +70,10 @@ export default function TransactionList({ transactions, currentUserId }: Transac
                   </p>
                 </div>
               </div>
-              <div className="text-right">
+              <div className="text-right shrink-0">
                 <p className={`font-bold text-sm ${amountClass}`}>
-                  {amountSign}${tx.amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  {amountSign}${formatAmount(tx.amount)}
                 </p>
-                <span className="inline-flex items-center mt-1 text-[10px] px-2 py-0.5 rounded-full font-semibold bg-zinc-800 text-zinc-400 capitalize">
-                  {tx.status}
-                </span>
               </div>
             </div>
           )

@@ -7,8 +7,8 @@ export default function CTA() {
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-emerald-500/10 rounded-full blur-[120px] pointer-events-none" />
 
       <div className="max-w-4xl mx-auto px-6 text-center relative z-10 space-y-8">
-        <h2 className="text-4xl md:text-5xl font-black tracking-tight leading-tight">
-          Take absolute control over <br />
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight leading-tight">
+          Take absolute control over <br className="hidden sm:block" />
           <span className="text-emerald-400">your financial roadmap.</span>
         </h2>
         
